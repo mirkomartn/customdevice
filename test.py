@@ -5,10 +5,12 @@ def setup():
     os.mkdir(".temp") 
     os.chdir(".temp")
     
+    os.system("wget https://raw.githubusercontent.com/mirkomartn/customdevice/master/customdevice.c")
+
     with open("Makefile", "w") as f:
         f.write("obj-m := customdevice.o")
 
-    os.system("sudo make -C /lib/modules/`uname -r`/build M=$PWD")
+    os.system("sudo make -C /lib/modules/`uname -r`/build M=$PWD >/dev/null 2>&1")
     os.system("sudo insmod customdevice.ko")
 
 def test_ioctl():
@@ -24,7 +26,7 @@ def test_ioctl():
     print(log)
 
 def cleanup(): 
-    for file in os.listdir(): 
+    for file in os.listdir("."): 
         os.remove(file) 
     os.chdir("..") 
     os.system("sudo rmmod customdevice")
@@ -32,7 +34,7 @@ def cleanup():
     
 
 if __name__ == '__main__':
-    #setup()
+    setup()
     test_ioctl()
-    #cleanup() 
+    cleanup() 
     
