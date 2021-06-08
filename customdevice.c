@@ -221,8 +221,6 @@ int __init custom_init (void)
 			break; 
 		}
 	
-		custom_dev.dev = MKDEV(custom_dev.major, 0); 
-	
 		cdev_init(&(custom_dev.cdev), &fops);
 		custom_dev.cdev.owner = THIS_MODULE; 
     	   	
