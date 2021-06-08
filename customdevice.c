@@ -65,8 +65,8 @@ static custom_dev_t custom_dev =
  */
 int open (struct inode * inode, struct file * fileptr)
 {
-  unsigned int mj = imajor(inode);	
-	unsigned int mn = iminor(inode);
+  	unsigned int mj = imajor(inode);	
+  	unsigned int mn = iminor(inode);
 	
 	if (mj != custom_dev.major || mn < 0)
 	{
@@ -87,7 +87,7 @@ int open (struct inode * inode, struct file * fileptr)
 		return -1; 
 	}
 	
-  printk(KERN_ALERT "[customdevice] File was opened by \"%s\" (pid %i).\n", current->comm, current->pid);
+  	printk(KERN_ALERT "[customdevice] File was opened by \"%s\" (pid %i).\n", current->comm, current->pid);
 	return 0;
 }		/* -----  end of function open  ----- */
 
@@ -123,7 +123,7 @@ int release(struct inode * inode, struct file * fileptr)
 		mutex_unlock(&(custom_dev.lock));
 	}
 
-  printk(KERN_ALERT "[customdevice] File was released.\n"); 
+  	printk(KERN_ALERT "[customdevice] File was released.\n"); 
 	
 	return 0; 
 }		/* -----  end of function release  ----- */
@@ -139,8 +139,8 @@ int release(struct inode * inode, struct file * fileptr)
  */
 long ioctl(struct file * fileptr, unsigned int cmd, unsigned long arg)
 {
-  printk(KERN_ALERT "[customdevice] The ioctl() was called by \"%s\" (pid %i).\n", current->comm, current->pid);
-  return 0; 
+ 	printk(KERN_ALERT "[customdevice] The ioctl() was called by \"%s\" (pid %i).\n", current->comm, current->pid);
+	return 0; 
 }		/* -----  end of function ioctl  ----- */
 
 
@@ -204,17 +204,17 @@ int __init custom_init (void)
 
 	/* use non-repeating do-while + error breaks instead of goto statements */ 
 	do 
-  {
-	  if (alloc_chrdev_region(&(custom_dev.dev), 0, 1, "customdevice") != 0)
+ 	{
+		if (alloc_chrdev_region(&(custom_dev.dev), 0, 1, "customdevice") != 0)
 		{
-		  printk(KERN_ALERT "Warning: alloc_chrdev_region() failed.\n");
+			printk(KERN_ALERT "Warning: alloc_chrdev_region() failed.\n");
 			err = 4; 
 			break; 
 		}
         
-    custom_dev.major = MAJOR(custom_dev.dev);
+		custom_dev.major = MAJOR(custom_dev.dev);
     
-	  if ((custom_dev.class_ptr = class_create(THIS_MODULE, "dummy_class")) == NULL)
+		if ((custom_dev.class_ptr = class_create(THIS_MODULE, "dummy_class")) == NULL)
 		{
 			printk(KERN_ALERT "Warning: class_create() failed.\n");
 			err = 3; 
@@ -226,9 +226,9 @@ int __init custom_init (void)
 		cdev_init(&(custom_dev.cdev), &fops);
 		custom_dev.cdev.owner = THIS_MODULE; 
     	   	
-    mutex_init(&(custom_dev.lock));
+		mutex_init(&(custom_dev.lock));
     	   	
-	  if (cdev_add(&(custom_dev.cdev), custom_dev.dev, 1) == -1)
+	  	if (cdev_add(&(custom_dev.cdev), custom_dev.dev, 1) == -1)
 		{
 			printk(KERN_ALERT "Warning: cdev_add() failed.\n");
 			err = 2;
@@ -236,20 +236,20 @@ int __init custom_init (void)
 		}
 		
 		if ((custom_dev.device_ptr = device_create(custom_dev.class_ptr, NULL, custom_dev.dev, NULL, "customdevice")) == NULL)
-    {
-      printk(KERN_ALERT "Warning: device_create() failed.\n");
-      err = 1;
-      break; 
-    }
-  } while (0); 
+		{
+			printk(KERN_ALERT "Warning: device_create() failed.\n");
+			err = 1;
+			break; 
+		}
+	} while (0); 
         
-  if (err != 0) 
-  {
-    cleanup(err); 
-    return err; 
-  }
+	if (err != 0) 
+  	{
+    		cleanup(err); 
+    		return err; 
+ 	}
         
-  return 0;
+	return 0;
 }		/* -----  end of function custom_init  ----- */
 
 
@@ -262,7 +262,7 @@ int __init custom_init (void)
  */
 void __exit custom_exit (void)
 {
-  cleanup(0); 
+	cleanup(0); 
 }		/* -----  end of function custom_exit  ----- */
 
 
